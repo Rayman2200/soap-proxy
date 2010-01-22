@@ -1,0 +1,236 @@
+@CHARSET "UTF-8";
+@IMPORT url("button.css");
+
+body {
+	font-family: verdana;
+	background-color: #EEEEEE;
+	font-size:12px;
+	margin-top: 0px;
+	margin-left: 30px;
+	margin-right: 30px;
+}
+
+.headerDiv {
+	margin:0;
+	padding-bottom: 8px;
+	padding-top: 8px;
+	padding-left: 0px;
+	padding-right: 0px;
+	width:100%;
+}
+
+.leftMargin {
+	margin-left: 5px;
+}
+
+.resultsTable {
+	border-style: solid;
+	border-collapse: collapse;
+	border-color: rgb(50,50,50);
+	border-width: 1px;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size:13px;
+}
+
+.resultsTable td {
+	background-color: rgb(250,250,250);
+}
+
+.statsCell {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 20px;
+	padding-right: 20px;
+	text-align:center;
+}
+
+.headerCell {
+	color: rgb(50,50,50);
+	background-color: rgb(187,209,255);
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 20px;
+	padding-right: 20px;
+	text-align:center;
+}
+
+#content {
+	background-color: white;
+}
+
+#main {
+	padding-bottom:10px;
+}
+
+#main table.mainBorder td.mainBorderRight {
+	width: 1px;
+}
+
+#main table.mainBorder td.mainBorderMiddle {
+	background:url(../img/titl2_b_middle.jpg) right top repeat-x;
+}
+
+#main table.mainBorder td.mainBorderMiddle span{
+	margin-left: 7px;
+	font-size: 16px;
+}
+
+#main table.mainBorder td.mainBorderLeft {
+	width: 1px;
+}
+
+#header {
+	background-color: rgb(57,111,173);
+	height: 100px;
+	position:relative;
+}
+
+#header span.title {
+	color: white;
+	padding-left: 10px;
+	padding-top:18px;
+	position:absolute;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#toolbar {
+	/*background-color:#A7C4E2;*/
+	background-color:rgb(207,226,241);
+	bottom:0;
+	font-size:0;
+	height:36px;
+	position:absolute;
+	width:100%;
+}
+
+#item {
+	margin-left: 7px;
+	margin-right: 7px;
+	margin-top: 15px;
+}
+
+fieldset {
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgb(57,111,173);
+	padding-bottom: 10px;
+}
+
+legend {
+	color: rgb(0,70,213);
+}
+
+.propertyName {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.propertyValue {
+	font-size: 13px;
+	padding-left: 20px;
+}
+
+.trOneFieldForm {
+	height: 48px;
+}
+
+.itemTable {
+	margin-top: 10px;
+}
+
+.uploadPageTable {
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.uploadPageTable td {
+}
+
+.schemaTable {
+	font-size:13px;
+}
+
+.schemaTable td {
+	text-align: left;
+	vertical-align: middle;
+	padding-top: 0px;
+	padding-bottom: 3px;
+	padding-right: 6px;
+	padding-left: 0px;
+}
+
+.targetUrlTable {
+	font-size:13px;
+}
+
+.targetUrlTable form {
+	padding: 0;
+	margin: 0;
+}
+
+.targetUrlTable td {
+	text-align: left;
+	vertical-align: middle;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 6px;
+	padding-left: 0px;
+}
+
+.modifyUrlTable {
+	font-size:13px;
+}
+
+.modifyUrlTable form {
+	padding: 0;
+	margin: 0;
+}
+
+.modifyUrlTable tr {
+	margin: 0;
+	padding: 0;
+}
+
+.modifyUrlTable td {
+	text-align: left;
+	vertical-align: middle;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 6px;
+	padding-left: 0px;
+}
+
+.addSchemaTable {
+	font-size:13px;
+}
+
+.addSchemaTable form {
+	padding: 0;
+	margin: 0;
+}
+
+.addSchemaTable tr {
+	margin: 0;
+	padding: 0;
+}
+
+.addSchemaTable td {
+	text-align: left;
+	vertical-align: middle;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 6px;
+	padding-left: 0px;
+}
+
+.noConfiguration {
+	margin-left: 7px;
+}
+
+.noResults {
+	margin-left: 7px;
+}

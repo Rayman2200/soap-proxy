@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java"%>
+<%@page import="java.util.List"%>
+<%@page import="com.ecs.soap.proxy.result.model.CallResult"%>
+<%@page import="com.ecs.soap.proxy.servlets.ResultsServlet"%>
+
+
+<%@page import="com.ecs.soap.proxy.result.model.CallResult.Status"%><html>
+<%
+List<CallResult> results = (List<CallResult>) request.getAttribute(ResultsServlet.RESULTS_ATT);
+%>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<%@include file="include/main-title.jsp" %>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/style.css" >
+</head>
+<body>
+<div id="content">
+<div id="header">
+<%@include file="include/header-title.jsp" %>
+<div style="display: none;">
+<form id="backForm" action="<%=request.getContextPath() %>/" method="GET" >
+</form>
+<form id="resultsForm" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="GET" >
+</form>
+</div>
+<div id="toolbar">
+<button onclick="document.getElementById('backForm').submit();" style="margin-left:7px; cursor:pointer; cursor:hand" ><img title="Back to mapping" src="<%=request.getContextPath() %>/img/mapping.gif" />&nbsp;Back to mapping</button>
+<button onclick="document.getElementById('resultsForm').submit();" style="cursor:pointer; cursor:hand" ><img title="Refresh" src="<%=request.getContextPath() %>/img/refresh.gif" />&nbsp;Refresh</button>
+</div>
+</div>
+<div id="main">
+<jsp:include page="include/main-top.jsp">
+	<jsp:param value="Last proxy results" name="title"/>
+</jsp:include>
+<% if(results == null || results.isEmpty()){ %>
+<p class="noResults"><i>No results yet</i></p>
+<% } else { %>
+<div style="margin-left: auto; margin-right: auto;">
+<table class="resultsTable" border="1" cellpadding="0" cellspacing="0" >
+<tr>
+<th class="headerCell"><b>Timestamp</b></th>
+<th class="headerCell"><b>URI</b></th>
+<th class="headerCell"><b>Request</b></th>
+<th class="headerCell"><b>Request status</b></th>
+<th class="headerCell"><b>Response</b></th>
+<th class="headerCell"><b>Response status</b></th>
+</tr>
+<% for(int i = results.size() - 1; i>=0; i--){
+CallResult result = results.get(i);
+%>
+<tr>
+<td class="statsCell">
+<%=result.getFormattedTimestamp() %>
+</td>
+<td class="statsCell">
+<%=result.getUri() %>
+</td>
+<td class="statsCell">
+<%if(result.getSoapRequest() == null){ %>
+-
+<%} else { %>
+<img title="Show SOAP request" style="cursor:pointer; cursor:hand" onclick="document.getElementById('requestForm.<%=i %>').submit();" src="<%=request.getContextPath() %>/img/message.gif" />
+<div style="display: none;">
+<form id="requestForm.<%=i %>" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="POST" target="_blank">
+<input type="hidden" name="<%=ResultsServlet.SHOW_PARAM %>" value="<%=ResultsServlet.REQUEST_VALUE %>" />
+<input type="hidden" name="<%=ResultsServlet.INDEX_PARAM %>" value="<%=i %>" />
+</form>
+</div>
+<%} %>
+</td>
+<td class="statsCell">
+<%if(result.getRequestStatus().equals(CallResult.Status.OK)){%>
+<%if(result.getRequestDetailedErrors().isEmpty()){ %>
+<img src="<%=request.getContextPath() %>/img/ok.gif" />
+<% } else { %>
+<img title="Show errors" style="cursor:pointer; cursor:hand" onclick="document.getElementById('requestErrorsForm.<%=i %>').submit();" src="<%=request.getContextPath() %>/img/warn.gif" />
+<%} %>
+<% } else { %>
+<img title="Show errors" style="cursor:pointer; cursor:hand" onclick="document.getElementById('requestErrorsForm.<%=i %>').submit();" src="<%=request.getContextPath() %>/img/ko.gif" />
+<%} %>
+<div style="display: none;">
+<form id="requestErrorsForm.<%=i %>" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="POST" target="_blank">
+<input type="hidden" name="<%=ResultsServlet.SHOW_PARAM %>" value="<%=ResultsServlet.REQUEST_ERRORS_VALUE %>" />
+<input type="hidden" name="<%=ResultsServlet.INDEX_PARAM %>" value="<%=i %>" />
+</form>
+</div>
+</td>
+<td class="statsCell">
+<%if(result.getSoapResponse() == null){ %>
+-
+<%} else { %>
+<img title="Show SOAP response" style="cursor:pointer; cursor:hand" onclick="document.getElementById('responseForm.<%=i %>').submit();" src="<%=request.getContextPath() %>/img/message.gif" />
+<div style="display: none;">
+<form id="responseForm.<%=i %>" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="POST" target="_blank">
+<input type="hidden" name="<%=ResultsServlet.SHOW_PARAM %>" value="<%=ResultsServlet.RESPONSE_VALUE %>" />
+<input type="hidden" name="<%=ResultsServlet.INDEX_PARAM %>" value="<%=i %>" />
+</form>
+</div>
+<%} %>
+</td>
+<td class="statsCell">
+<%if(result.getResponseStatus().equals(CallResult.Status.OK)){%>
+<%if(result.getResponseDetailedErrors().isEmpty()){ %>
+<img src="<%=request.getContextPath() %>/img/ok.gif" />
+<% } else { %>
+<img title="Show errors" style="cursor:pointer; cursor:hand" onclick="document.getElementById('responseErrorsForm.<%=i %>').submit();" src="<%=request.getContextPath() %>/img/warn.gif" />
+<%} %>
+<% } else { %>
+<img title="Show errors" style="cursor:pointer; cursor:hand" onclick="document.getElementById('responseErrorsForm.<%=i %>').submit();" src="<%=request.getContextPath() %>/img/ko.gif" />
+<%} %>
+<div style="display: none;">
+<form id="responseErrorsForm.<%=i %>" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="POST" target="_blank">
+<input type="hidden" name="<%=ResultsServlet.SHOW_PARAM %>" value="<%=ResultsServlet.RESPONSE_ERRORS_VALUE %>" />
+<input type="hidden" name="<%=ResultsServlet.INDEX_PARAM %>" value="<%=i %>" />
+</form>
+</div>
+</td>
+</tr>
+<%
+}
+%>
+</div>
+</table>
+<%
+}
+%>
+</div>
+</div>
+</body>
+</html>
