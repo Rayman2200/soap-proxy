@@ -70,6 +70,9 @@ CallResult result = results.get(i);
 <%} %>
 </td>
 <td class="statsCell">
+<%if(result.getSoapRequest() == null){ %>
+-
+<%} else { %>
 <%if(result.getRequestStatus().equals(CallResult.Status.OK)){%>
 <%if(result.getRequestDetailedErrors().isEmpty()){ %>
 <img src="<%=request.getContextPath() %>/img/ok.gif" />
@@ -78,6 +81,7 @@ CallResult result = results.get(i);
 <%} %>
 <% } else { %>
 <img title="Show errors" style="cursor:pointer; cursor:hand" onclick="document.getElementById('requestErrorsForm.<%=i %>').submit();" src="<%=request.getContextPath() %>/img/ko.gif" />
+<%} %>
 <%} %>
 <div style="display: none;">
 <form id="requestErrorsForm.<%=i %>" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="POST" target="_blank">
@@ -100,6 +104,9 @@ CallResult result = results.get(i);
 <%} %>
 </td>
 <td class="statsCell">
+<%if(result.getSoapResponse() == null){ %>
+-
+<%} else { %>
 <%if(result.getResponseStatus().equals(CallResult.Status.OK)){%>
 <%if(result.getResponseDetailedErrors().isEmpty()){ %>
 <img src="<%=request.getContextPath() %>/img/ok.gif" />
@@ -108,6 +115,7 @@ CallResult result = results.get(i);
 <%} %>
 <% } else { %>
 <img title="Show errors" style="cursor:pointer; cursor:hand" onclick="document.getElementById('responseErrorsForm.<%=i %>').submit();" src="<%=request.getContextPath() %>/img/ko.gif" />
+<%} %>
 <%} %>
 <div style="display: none;">
 <form id="responseErrorsForm.<%=i %>" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="POST" target="_blank">
