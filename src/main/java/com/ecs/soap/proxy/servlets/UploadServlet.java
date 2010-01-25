@@ -109,7 +109,8 @@ public class UploadServlet extends HttpServlet {
 						}
 					}
 				} else {
-					schemaFileName = item.getName();
+					// IE6 bug : from IE6, the file name is the absolute path of the file, instead of the simple file name
+					schemaFileName = new File(item.getName()).getName();
 					int size = (int) item.getSize();
 					if (!StringUtils.isEmpty(schemaFileName) && size > 0) {
 						logger.debug("schema file: " + schemaFileName);
