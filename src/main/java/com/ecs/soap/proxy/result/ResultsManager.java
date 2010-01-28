@@ -34,7 +34,7 @@ public class ResultsManager {
 
 	public synchronized void addResult(CallResult result){
 		if(logger.isDebugEnabled()){
-			StringBuffer message = new StringBuffer("adding call result to stat queue :\n");
+			StringBuilder message = new StringBuilder("adding call result to stat queue :\n");
 			message.append(String.valueOf(result));
 			logger.debug(message.toString());
 		}

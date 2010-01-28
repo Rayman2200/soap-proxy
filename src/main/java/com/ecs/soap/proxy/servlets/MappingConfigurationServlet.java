@@ -41,7 +41,7 @@ public class MappingConfigurationServlet extends HttpServlet {
 		Properties uriMapping = new Properties();
 		uriMapping.load(new FileInputStream(this.config.getUriMappingFile()));
 		if(logger.isTraceEnabled()){
-			StringBuffer buf = new StringBuffer("uri mapping: \n");
+			StringBuilder buf = new StringBuilder("uri mapping: \n");
 			for(Enumeration eKey = uriMapping.keys(); eKey.hasMoreElements(); ){
 				String uri = (String) eKey.nextElement();
 				String url = uriMapping.getProperty(uri);
@@ -55,7 +55,7 @@ public class MappingConfigurationServlet extends HttpServlet {
 		Properties schemaMapping = new Properties();
 		schemaMapping.load(new FileInputStream(this.config.getSchemaMappingFile()));
 		if(logger.isTraceEnabled()){
-			StringBuffer buf = new StringBuffer("schema mapping: \n");
+			StringBuilder buf = new StringBuilder("schema mapping: \n");
 			for(Enumeration eKey = schemaMapping.keys(); eKey.hasMoreElements(); ){
 				String uri = (String) eKey.nextElement();
 				String url = schemaMapping.getProperty(uri);

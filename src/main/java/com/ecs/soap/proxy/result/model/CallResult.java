@@ -46,7 +46,7 @@ public class CallResult implements Serializable {
 
 	@Override
 	public String toString(){
-		StringBuffer s = new StringBuffer("CallResult: ");
+		StringBuilder s = new StringBuilder("CallResult: ");
 		s.append("uri=" + this.uri);
 		s.append(", ");
 		s.append("requestStatus=" + this.requestStatus);

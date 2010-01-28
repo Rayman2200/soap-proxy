@@ -113,18 +113,14 @@ public class UploadServlet extends HttpServlet {
 					schemaFileName = new File(item.getName()).getName();
 					int size = (int) item.getSize();
 					if (!StringUtils.isEmpty(schemaFileName) && size > 0) {
-						logger.debug("schema file: " + schemaFileName);
+						if(logger.isDebugEnabled()){
+							logger.debug("schema file: " + schemaFileName);
+						}
 						String itemPath = item.getString();
-						logger.trace("schema file content: \n" + itemPath);
+						if(logger.isTraceEnabled()){
+							logger.trace("schema file content: \n" + itemPath);
+						}
 						schemaFileContent = itemPath.getBytes();
-						/*try {
-							Node schemaNode = parseXMLSchemaNode(schemaFileContent);
-							String schemaContent = nodeToString(schemaNode);
-							schemaFactory.newSchema(new SAXSource(new InputSource(new StringReader(schemaContent))));
-						} catch (Exception e) {
-							logger.warn("Wrong schema file", e);
-							errors.put(SCHEMA_FILE_PARAM + ERROR_SUFFIX, "should be a file containing a valid XSD schema");
-						}*/
 					}
 				}
 			}

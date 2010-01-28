@@ -6,7 +6,6 @@ import static com.ecs.soap.proxy.util.Utils.parseXMLSchemaNode;
 import static com.ecs.soap.proxy.util.Utils.schemaFactory;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,6 +30,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -87,10 +87,12 @@ public class SOAPServlet extends HttpServlet {
 			targetURI = targetURI.substring(0, targetURI.length() - 1);
 		}
 
-		logger.debug("new request received ...");
-		logger.debug("request URI : " + requestURI);
-		logger.debug("target URI : " + targetURI);
-		logger.debug("content type : " + requestContentType);
+		if(logger.isDebugEnabled()){
+			logger.debug("new request received ...");
+			logger.debug("request URI : " + requestURI);
+			logger.debug("target URI : " + targetURI);
+			logger.debug("content type : " + requestContentType);
+		}
 
 		CallResult callResult = new CallResult(targetURI);
 
@@ -122,7 +124,9 @@ public class SOAPServlet extends HttpServlet {
 			requestXMLBody = requestXMLBody.replaceAll(XOP_INCLUDE_PATTERN, BINARY_REPLACEMENT);
 		}
 		callResult.setSoapRequest(requestXMLBody);
-		logger.trace("request XML body : \n" + requestXMLBody);
+		if(logger.isTraceEnabled()){
+			logger.trace("request XML body : \n" + requestXMLBody);
+		}
 
 		// validation
 		Schema schema = null;
@@ -145,7 +149,7 @@ public class SOAPServlet extends HttpServlet {
 					String requestContent = nodeToString(requestNode);
 					try {
 						if(logger.isDebugEnabled()){
-							StringBuffer message = new StringBuffer("validating SOAP request content");
+							StringBuilder message = new StringBuilder("validating SOAP request content");
 							message.append(":\n");
 							message.append(requestContent);
 							logger.debug(message);
@@ -190,7 +194,9 @@ public class SOAPServlet extends HttpServlet {
 
 		int responseCode = responseHandler.getResponseCode();
 		if (responseCode != 200) {
-			logger.debug("target endpoint did not return error code 200 (actual=" + responseCode + ")");
+			if(logger.isDebugEnabled()){
+				logger.debug("target endpoint did not return error code 200 (actual=" + responseCode + ")");
+			}
 			callResult.setResponseStatus(Status.KO);
 			callResult.addResponseDetailedError("target endpoint did not return error code 200 (actual=" + responseCode + ")");
 			this.stats.addResult(callResult);
@@ -212,7 +218,9 @@ public class SOAPServlet extends HttpServlet {
 			responseXMLBody = responseXMLBody.replaceAll(XOP_INCLUDE_PATTERN, BINARY_REPLACEMENT);
 		}
 		callResult.setSoapResponse(responseXMLBody);
-		logger.trace("request XML body : \n" + responseXMLBody);
+		if(logger.isTraceEnabled()){
+			logger.trace("request XML body : \n" + responseXMLBody);
+		}
 
 		if (schema == null) {
 			logger.warn("no schema is mapped to URI " + targetURI + " or schema file is wrong, skipping validation");
@@ -227,7 +235,7 @@ public class SOAPServlet extends HttpServlet {
 					String responseContent = nodeToString(responseNode);
 					try {
 						if(logger.isDebugEnabled()){
-							StringBuffer message = new StringBuffer("validating SOAP response content");
+							StringBuilder message = new StringBuilder("validating SOAP response content");
 							message.append(":\n");
 							message.append(responseContent);
 							logger.debug(message);
@@ -269,7 +277,7 @@ public class SOAPServlet extends HttpServlet {
 	}
 
 	private String extractSoapEnvelope(byte[] body) throws IOException{
-		StringBuffer requestXMLBuf = new StringBuffer();
+		StringBuilder requestXMLBuf = new StringBuilder();
 		BufferedReader xmlRequestReader = new BufferedReader(new StringReader(new String(body)));
 		boolean beginFound = false;
 		boolean endFound = false;
@@ -314,7 +322,9 @@ public class SOAPServlet extends HttpServlet {
 					throw new IllegalArgumentException("target URL " + urlAsString + " is not valid for URI " + uri);
 				}
 			}
-			logger.debug("found target URL " + urlAsString + " for URI " + uri);
+			if(logger.isDebugEnabled()){
+				logger.debug("found target URL " + urlAsString + " for URI " + uri);
+			}
 		} else {
 			throw new IllegalArgumentException("no target URL found for URI " + uri);
 		}
@@ -339,13 +349,16 @@ public class SOAPServlet extends HttpServlet {
 				for (String schemaFileName : schemaFileTokens) {
 					File schemaFile = new File(this.config.getXsdDir(), schemaFileName);
 					if (schemaFile.exists() || schemaFile.isFile() || schemaFile.canRead()) {
-						logger.debug("found schema " + schemaFile.getAbsolutePath() + " for URI " + uri);
+						if(logger.isDebugEnabled()){
+							logger.debug("found schema " + schemaFile.getAbsolutePath() + " for URI " + uri);
+						}
 						try {
 							Node schemaNode = parseXMLSchemaNode(schemaFile);
 							try {
 								String schemaContent = nodeToString(schemaNode);
-								logger.trace("schema content: \n" + schemaContent);
-								//schema = schemaFactory.newSchema(new SAXSource(new InputSource(new StringReader(schemaContent))));
+								if(logger.isTraceEnabled()){
+									logger.trace("schema content: \n" + schemaContent);
+								}
 								schemaSources.add(new SAXSource(new InputSource(new StringReader(schemaContent))));
 							} catch (TransformerException e) {
 								logger.debug("failed to print schema content", e);
@@ -402,7 +415,9 @@ public class SOAPServlet extends HttpServlet {
 			String headerName = e.nextElement();
 			String headerValue = req.getHeader(headerName);
 			if (headerName != null && !headerName.toLowerCase().equals("transfer-encoding")) {
-				logger.trace("adding header (" + headerName + "=" + headerValue + ") to request");
+				if(logger.isTraceEnabled()){
+					logger.trace("adding header (" + headerName + "=" + headerValue + ") to request");
+				}
 				httpConn.addRequestProperty(headerName, headerValue);
 			}
 		}
@@ -414,7 +429,9 @@ public class SOAPServlet extends HttpServlet {
 			List<String> headerValues = respHeader.getValue();
 			for (String headerValue : headerValues) {
 				if (headerName != null && !headerName.toLowerCase().equals("transfer-encoding")) {
-					logger.trace("adding header (" + headerName + "=" + headerValue + ") to response");
+					if(logger.isTraceEnabled()){
+						logger.trace("adding header (" + headerName + "=" + headerValue + ") to response");
+					}
 					resp.addHeader(headerName, headerValue);
 				}
 			}
@@ -435,9 +452,11 @@ public class SOAPServlet extends HttpServlet {
 
 		TargetResponseHandler responseHandler = new TargetResponseHandler();
 		int responseCode = httpConn.getResponseCode();
-		logger.debug("target response code: " + responseCode);
 		String responseMessage = httpConn.getResponseMessage();
-		logger.debug("target response message: " + responseMessage);
+		if(logger.isDebugEnabled()){
+			logger.debug("target response code: " + responseCode);
+			logger.debug("target response message: " + responseMessage);
+		}
 		responseHandler.setResponseCode(httpConn.getResponseCode());
 		responseHandler.setResponseMessage(responseMessage);
 		responseHandler.setHeaders(httpConn.getHeaderFields());

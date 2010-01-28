@@ -51,12 +51,16 @@ public class DeleteServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String type = req.getParameter(TYPE_PARAM);
-		logger.debug("type = " + type);
+		if(logger.isDebugEnabled()){
+			logger.debug("type = " + type);
+		}
 		if(!SCHEMA_PARAM.equals(type) && !ALL_PARAM.equals(type)){
 			throw new ServletException("type parameter should be " + SCHEMA_PARAM + " or " + ALL_PARAM);
 		}
 		String uri = req.getParameter(URI_PARAM);
-		logger.debug("uri = " + uri);
+		if(logger.isDebugEnabled()){
+			logger.debug("uri = " + uri);
+		}
 		if(StringUtils.isEmpty(uri)){
 			throw new ServletException("uri parameter should be part of the mapping configuration");
 		}

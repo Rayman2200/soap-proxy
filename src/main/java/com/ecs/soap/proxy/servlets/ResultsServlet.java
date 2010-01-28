@@ -68,9 +68,11 @@ public class ResultsServlet extends HttpServlet {
 		}
 
 		String show = req.getParameter(SHOW_PARAM);
-		logger.debug("show=" + show);
 		String indexAsString = req.getParameter(INDEX_PARAM);
-		logger.debug("index=" + indexAsString);
+		if(logger.isDebugEnabled()){
+			logger.debug("show=" + show);
+			logger.debug("index=" + indexAsString);
+		}
 		if(StringUtils.isEmpty(indexAsString)){
 			throw new ServletException("index parameter should not be null of empty");
 		}
