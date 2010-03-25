@@ -34,6 +34,8 @@ import com.ecs.soap.proxy.config.Configuration;
 
 public class UploadServlet extends HttpServlet {
 
+	private static final String DOCUMENTATION_PATTERN = "(?s)(<[a-zA-Z]+:)?[d|D]ocumentation>.*?</([a-zA-Z]+:)?[d|D]ocumentation>";
+
 	/**
 	 *
 	 */
@@ -166,7 +168,9 @@ public class UploadServlet extends HttpServlet {
 							schemaFile.delete();
 						}
 						FileOutputStream fos = new FileOutputStream(schemaFile);
-						fos.write(schemaFileContent);
+						String schemaFileContentAsString = new String(schemaFileContent);
+						schemaFileContentAsString = schemaFileContentAsString.replaceAll(DOCUMENTATION_PATTERN, "");
+						fos.write(schemaFileContentAsString.getBytes());
 						fos.close();
 						if (schemaMapping.containsKey(uri)) {
 							List<String> schemaFiles = new LinkedList<String>();

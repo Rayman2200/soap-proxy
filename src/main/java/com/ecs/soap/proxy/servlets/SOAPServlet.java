@@ -372,12 +372,14 @@ public class SOAPServlet extends HttpServlet {
 						throw new IOException("failed to acces schema file " + schemaFile.getAbsolutePath());
 					}
 				}
-				Source[] schemaSourcesAsArray = new Source[schemaSources.size()];
-				schemaSources.toArray(schemaSourcesAsArray);
-				try {
-					schema = schemaFactory.newSchema(schemaSourcesAsArray);
-				} catch (SAXException e) {
-					logger.warn("an error occured while building schema from Sources", e);
+				if(!schemaSources.isEmpty()){
+					Source[] schemaSourcesAsArray = new Source[schemaSources.size()];
+					schemaSources.toArray(schemaSourcesAsArray);
+					try {
+						schema = schemaFactory.newSchema(schemaSourcesAsArray);
+					} catch (SAXException e) {
+						logger.warn("an error occured while building schema from Sources", e);
+					}
 				}
 			}
 		}
