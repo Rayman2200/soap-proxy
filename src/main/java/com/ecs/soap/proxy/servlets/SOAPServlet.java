@@ -182,7 +182,9 @@ public class SOAPServlet extends HttpServlet {
 
 		TargetResponseHandler responseHandler = null;
 		try {
+			long begin = System.currentTimeMillis();
 			responseHandler = this.callTargetEndpoint(req, targetURL, requestBody);
+			callResult.setResponseTime(new Long(System.currentTimeMillis() - begin));
 		} catch (IOException e) {
 			logger.debug("failed to invoke target endpoint", e);
 			callResult.setResponseStatus(Status.KO);

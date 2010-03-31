@@ -45,6 +45,7 @@ List<CallResult> results = (List<CallResult>) request.getAttribute(ResultsServle
 <th class="headerCell"><b>Request status</b></th>
 <th class="headerCell"><b>Response</b></th>
 <th class="headerCell"><b>Response status</b></th>
+<th class="headerCell"><b>Response time (ms)</b></th>
 </tr>
 <% for(int i = results.size() - 1; i>=0; i--){
 CallResult result = results.get(i);
@@ -123,6 +124,13 @@ CallResult result = results.get(i);
 <input type="hidden" name="<%=ResultsServlet.INDEX_PARAM %>" value="<%=i %>" />
 </form>
 </div>
+</td>
+<td class="statsCell">
+<%if(result.getResponseTime() == null){ %>
+-
+<%} else { %>
+<%=result.getResponseTime() %>
+<%} %>
 </td>
 </tr>
 <%

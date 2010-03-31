@@ -31,6 +31,8 @@ public class CallResult implements Serializable {
 
 	private Date timestamp;
 
+	private Long responseTime;
+
 	private List<String> requestDetailedErrors;
 
 	private List<String> responseDetailedErrors;
@@ -52,6 +54,8 @@ public class CallResult implements Serializable {
 		s.append("requestStatus=" + this.requestStatus);
 		s.append(", ");
 		s.append("responseStatus=" + this.responseStatus);
+		s.append(", ");
+		s.append("responseTime=" + this.responseTime);
 		return s.toString();
 	}
 
@@ -133,6 +137,14 @@ public class CallResult implements Serializable {
 
 	public void setResponseStatus(Status responseStatus) {
 		this.responseStatus = responseStatus;
+	}
+
+	public Long getResponseTime() {
+		return responseTime;
+	}
+
+	public void setResponseTime(Long responseTime) {
+		this.responseTime = responseTime;
 	}
 
 }
