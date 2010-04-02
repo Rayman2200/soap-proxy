@@ -115,6 +115,19 @@ public class SOAPServlet extends HttpServlet {
 			return;
 		}
 
+		String queryString = req.getQueryString();
+		if(logger.isDebugEnabled()){
+			logger.debug("Query string is: " + req.getQueryString());
+		}
+		if(!StringUtils.isEmpty(queryString) && queryString.trim().equalsIgnoreCase("wsdl")){
+			String forward = targetURL.toExternalForm() + "?wsdl";
+			if(logger.isDebugEnabled()){
+				logger.debug("wsdl requested, forwarding request to " + forward);
+			}
+			resp.sendRedirect(forward);
+			return;
+		}
+
 		byte[] requestBody = this.readHttpRequestBody(req);
 
 		String requestXMLBody = extractSoapEnvelope(requestBody);
