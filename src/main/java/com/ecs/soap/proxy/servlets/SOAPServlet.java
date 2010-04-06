@@ -226,66 +226,70 @@ public class SOAPServlet extends HttpServlet {
 
 		byte[] responseBody = responseHandler.getResponseBody();
 
-		String responseXMLBody = extractSoapEnvelope(responseBody);
+		if(responseBody != null && responseBody.length > 0){
 
-		if(responseContentType.contains(MULTIPART_RELATED) && responseContentType.contains(XOP_XML)){
-			logger.debug("MTOM detected, removing <xop:Include .../> declaration from XML");
-			responseXMLBody = responseXMLBody.replaceAll(XOP_INCLUDE_PATTERN, BINARY_REPLACEMENT);
-		}
-		callResult.setSoapResponse(responseXMLBody);
-		if(logger.isTraceEnabled()){
-			logger.trace("request XML body : \n" + responseXMLBody);
-		}
+			String responseXMLBody = extractSoapEnvelope(responseBody);
 
-		if (schema == null) {
-			logger.warn("no schema is mapped to URI " + targetURI + " or schema file is wrong, skipping validation");
-			callResult.addResponseDetailedError("no schema is mapped to URI " + targetURI + " or schema file is wrong, skipping validation");
-		} else {
-			try {
-				Element root = parseXMLRootElement(responseXMLBody);
-				String soapEnvNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
-				Node bodyNode = root.getElementsByTagNameNS(soapEnvNamespace, "Body").item(0);
-				Node responseNode = bodyNode.getFirstChild();
+			if(responseContentType.contains(MULTIPART_RELATED) && responseContentType.contains(XOP_XML)){
+				logger.debug("MTOM detected, removing <xop:Include .../> declaration from XML");
+				responseXMLBody = responseXMLBody.replaceAll(XOP_INCLUDE_PATTERN, BINARY_REPLACEMENT);
+			}
+			callResult.setSoapResponse(responseXMLBody);
+			if(logger.isTraceEnabled()){
+				logger.trace("request XML body : \n" + responseXMLBody);
+			}
+
+			if (schema == null) {
+				logger.warn("no schema is mapped to URI " + targetURI + " or schema file is wrong, skipping validation");
+				callResult.addResponseDetailedError("no schema is mapped to URI " + targetURI + " or schema file is wrong, skipping validation");
+			} else {
 				try {
-					String responseContent = nodeToString(responseNode);
+					Element root = parseXMLRootElement(responseXMLBody);
+					String soapEnvNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
+					Node bodyNode = root.getElementsByTagNameNS(soapEnvNamespace, "Body").item(0);
+					Node responseNode = bodyNode.getFirstChild();
 					try {
-						if(logger.isDebugEnabled()){
-							StringBuilder message = new StringBuilder("validating SOAP response content");
-							message.append(":\n");
-							message.append(responseContent);
-							logger.debug(message);
+						String responseContent = nodeToString(responseNode);
+						try {
+							if(logger.isDebugEnabled()){
+								StringBuilder message = new StringBuilder("validating SOAP response content");
+								message.append(":\n");
+								message.append(responseContent);
+								logger.debug(message);
+							}
+							schema.newValidator().validate(new SAXSource(new InputSource(new StringReader(responseContent))));
+							logger.debug("content is ok.");
+						} catch (Exception e) {
+							logger.debug("SOAP response content is not valid", e);
+							callResult.setResponseStatus(Status.KO);
+							callResult.addResponseDetailedError(e);
+							this.stats.addResult(callResult);
+							resp.sendError(BAD_REQUEST_CODE, e.getMessage());
+							return;
 						}
-						schema.newValidator().validate(new SAXSource(new InputSource(new StringReader(responseContent))));
-						logger.debug("content is ok.");
-					} catch (Exception e) {
-						logger.debug("SOAP response content is not valid", e);
-						callResult.setResponseStatus(Status.KO);
+					} catch (TransformerException e) {
+						logger.warn("failed to print SOAP response content, skipping validation", e);
 						callResult.addResponseDetailedError(e);
-						this.stats.addResult(callResult);
-						resp.sendError(BAD_REQUEST_CODE, e.getMessage());
-						return;
 					}
-				} catch (TransformerException e) {
-					logger.warn("failed to print SOAP response content, skipping validation", e);
+				} catch (ParserConfigurationException e) {
+					logger.warn("failed to read SOAP response content, skipping validation", e);
+					callResult.addResponseDetailedError(e);
+				} catch (SAXException e) {
+					logger.warn("failed to read SOAP response content, skipping validation", e);
+					callResult.addResponseDetailedError(e);
+				} catch (IOException e) {
+					logger.warn("failed to read SOAP response content, skipping validation", e);
 					callResult.addResponseDetailedError(e);
 				}
-			} catch (ParserConfigurationException e) {
-				logger.warn("failed to read SOAP response content, skipping validation", e);
-				callResult.addResponseDetailedError(e);
-			} catch (SAXException e) {
-				logger.warn("failed to read SOAP response content, skipping validation", e);
-				callResult.addResponseDetailedError(e);
-			} catch (IOException e) {
-				logger.warn("failed to read SOAP response content, skipping validation", e);
-				callResult.addResponseDetailedError(e);
 			}
 		}
-
 		logger.debug("forwarding target response to client ...");
-		resp.setContentLength(responseBody.length);
 		this.addResponseHeaders(resp, responseHandler);
-		resp.getOutputStream().write(responseBody);
-		resp.getOutputStream().close();
+		if(responseBody != null && responseBody.length > 0){
+			resp.setContentLength(responseBody.length);
+			resp.getOutputStream().write(responseBody);
+			resp.getOutputStream().close();
+		}
 		this.stats.addResult(callResult);
 		logger.debug("done.");
 		return;
