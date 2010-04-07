@@ -62,7 +62,7 @@ public class SOAPServlet extends HttpServlet {
 
 	private static final String MULTIPART_RELATED = "multipart/related";
 	private static final String XOP_XML = "application/xop+xml";
-	private static final String XOP_INCLUDE_PATTERN = "(?s)<xop:[i|I]nclude.*?/>";
+	private static final String XOP_INCLUDE_PATTERN = "(?s)((<xop:[i|I]nclude.*?/>)|(<xop:[i|I]nclude.*?</xop:[i|I]nclude>))";
 
 	private static final int BAD_REQUEST_CODE = 400;
 	private static final int INTERNAL_ERROR_CODE = 500;
