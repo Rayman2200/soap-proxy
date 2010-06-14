@@ -16,9 +16,9 @@ public class Configuration {
 	
 	private static String SOAP_PROXY_PATH = "/var/soap-proxy";
 	
-	private static final String SOAP_PROXY_CONFIG_PATH = SOAP_PROXY_PATH + "/config";
+	private static final String SOAP_PROXY_CONFIG_PATH = "config";
 
-	private static final String SOAP_PROXY_XSD_PATH = SOAP_PROXY_CONFIG_PATH + "/xsd";
+	private static final String SOAP_PROXY_XSD_PATH = "xsd";
 
 	private static final String SOAP_PROXY_URI_MAPPING = "uri-mapping.properties";
 
@@ -70,7 +70,7 @@ public class Configuration {
 			throw new IllegalStateException(mainDir.getAbsolutePath() + " is not a directory, or is not readable");
 		}
 		logger.info("checking configuration ...");
-		File configDir = new File(SOAP_PROXY_CONFIG_PATH);
+		File configDir = new File(mainDir, SOAP_PROXY_CONFIG_PATH);
 		if (!configDir.exists()){
 			logger.info("config directory " + configDir.getAbsolutePath() + " does not exist, creating it");
 			boolean success = configDir.mkdirs();
@@ -122,7 +122,7 @@ public class Configuration {
 			this.schemaMappingFile = schemaMappingFile;
 			logger.info(schemaMappingFile.getAbsolutePath() + " directory: ok.");
 		}
-		File xsdDir = new File(SOAP_PROXY_XSD_PATH);
+		File xsdDir = new File(configDir, SOAP_PROXY_XSD_PATH);
 		if (!xsdDir.exists()){
 			logger.info("xsd directory " + xsdDir.getAbsolutePath() + " does not exist, creating it");
 			boolean success = xsdDir.mkdirs();
