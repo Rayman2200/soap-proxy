@@ -60,5 +60,9 @@ public class ResultsManager {
 		this.results = new ArrayBlockingQueue<CallResult>(this.capacity);
 		this.results.addAll(currentResults);
 	}
+	
+	public synchronized void clear(){
+		this.results.clear();
+	}
 
 }

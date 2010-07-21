@@ -35,6 +35,8 @@ public class ResultsServlet extends HttpServlet {
 	public static final String SHOW_PARAM = "show";
 
 	public static final String INDEX_PARAM = "index";
+	
+	public static final String CLEAR_PARAM = "clear";
 
 	public static final String REQUEST_ERRORS_VALUE = "request_errors";
 
@@ -48,6 +50,12 @@ public class ResultsServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String clear = req.getParameter(CLEAR_PARAM);
+		if(!StringUtils.isEmpty(clear) && clear.equals("all")){
+			this.resultsManager.clear();
+		}
+		
 		List<CallResult> stats = this.resultsManager.listResults();
 		req.setAttribute(RESULTS_ATT, stats);
 		if(req.getSession().getAttribute(RESULTS_ATT) != null){

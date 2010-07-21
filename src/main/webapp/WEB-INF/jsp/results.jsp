@@ -23,10 +23,14 @@ List<CallResult> results = (List<CallResult>) request.getAttribute(ResultsServle
 </form>
 <form id="resultsForm" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="GET" >
 </form>
+<form id="clearForm" action="<%=request.getContextPath() + ResultsServlet.servletContextPath %>" method="GET" >
+<input type="hidden" name="<%=ResultsServlet.CLEAR_PARAM %>" value="all" />
+</form>
 </div>
 <div id="toolbar">
 <button onclick="document.getElementById('backForm').submit();" style="margin-left:7px; cursor:pointer; cursor:hand" ><img title="Back to mapping" src="<%=request.getContextPath() %>/img/mapping.gif" />&nbsp;Back to mapping</button>
 <button onclick="document.getElementById('resultsForm').submit();" style="cursor:pointer; cursor:hand" ><img title="Refresh" src="<%=request.getContextPath() %>/img/refresh.gif" />&nbsp;Refresh</button>
+<button onclick="document.getElementById('clearForm').submit();" style="cursor:pointer; cursor:hand" ><img title="Clear" src="<%=request.getContextPath() %>/img/delete.gif" />&nbsp;Clear</button>
 </div>
 </div>
 <div id="main">
