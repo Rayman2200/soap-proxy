@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="java.util.Map"%>
 <%@ page language="java"%>
 <%@page import="java.util.List"%>
 <%@page import="com.ecs.soap.proxy.result.model.CallResult"%>
@@ -8,6 +9,7 @@
 <%@page import="com.ecs.soap.proxy.result.model.CallResult.Status"%><html>
 <%
 List<CallResult> results = (List<CallResult>) request.getAttribute(ResultsServlet.RESULTS_ATT);
+Map<String, String> chartsPng = (Map<String, String>) request.getAttribute(ResultsServlet.GRAPHS_ATT);
 %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -146,6 +148,22 @@ CallResult result = results.get(i);
 }
 %>
 </div>
+<%if(chartsPng != null && !chartsPng.isEmpty()) {%>
+<br/>
+<br/>
+<br/>
+<div style="margin-left: auto; margin-right: auto;">
+<table class="graphsTable" border="0" cellpadding="0" cellspacing="0" >
+<%for(String content : chartsPng.values()) {%>
+<tr align="center">
+<td class="statsCell" align="center">
+<img  align="middle" src="data:image/png;base64,<%=content %>" />
+</td>
+</tr>
+<%} %>
+</table>
+</div>
+<%} %>
 </div>
 </body>
 </html>

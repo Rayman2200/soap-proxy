@@ -35,7 +35,7 @@ public class MappingConfigurationServlet extends HttpServlet {
 	
 	private Configuration config;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Properties uriMapping = new Properties();
